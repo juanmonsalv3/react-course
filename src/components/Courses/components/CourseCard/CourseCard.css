@@ -1,0 +1,33 @@
+.course-card {
+  /* border: 1px solid red; */
+  margin-bottom: 1rem;
+  border: 0.5px solid green;
+}
+
+.main-section, .side-section {
+  display: inline-block;
+  vertical-align: top;
+  box-sizing: border-box;
+  padding: 1rem;
+}
+
+.main-section {
+  width: 60%;
+  padding-right: 5rem;
+}
+
+.course-title {
+  margin: 0;
+}
+
+.side-section {
+  width: 40%;
+}
+
+.side-section p {
+  margin: 0.5rem 0;
+}
+
+button {
+  margin: auto;
+}

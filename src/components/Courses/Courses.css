@@ -1,0 +1,12 @@
+.courses-section {
+  border: 0.5px solid blue;
+  padding: 1.5rem;
+}
+
+.search-bar {
+  width: 50%;
+}
+
+.create-course-btn {
+  float: right;
+}

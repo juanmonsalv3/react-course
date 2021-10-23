@@ -1,0 +1,46 @@
+.author-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.left-section {
+  width: 49%;
+}
+
+.create-input {
+  margin-bottom: 1rem;
+}
+
+textarea {
+  width: 100%;
+  height: 6rem;
+}
+
+h4 {
+  text-align: center;
+  margin: 0.5rem 0;
+}
+
+li {
+  list-style-type: none;
+  line-height: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+li > div {
+  display: inline-block;
+}
+
+.author-name {
+  margin-right: 5rem;
+  width: 180px;
+}
+
+.author-section input{
+  width: 100%;
+}
+
+.author-btn {
+  text-align: center;
+  margin-bottom: 2rem;
+}

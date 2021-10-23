@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  height: 120px;
+  align-items: center;
+  border: 0.5px solid red;
+  padding-right: 2rem;
+}
+
+.header__right-pane {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.username {
+  padding: 1rem 2rem;
+  margin: 0 2rem;
+  font-size: inherit;
+}
+
+button {
+  font-size: inherit;
+}
+
+img {
+  width: 120px;
+}

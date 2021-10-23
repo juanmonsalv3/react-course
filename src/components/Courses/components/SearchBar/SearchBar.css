@@ -1,0 +1,13 @@
+.search-bar {
+  vertical-align: middle;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.filter-input {
+  display: inline-block;
+}
+
+input {
+  width: 400px;
+}

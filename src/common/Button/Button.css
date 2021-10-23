@@ -1,0 +1,11 @@
+button {
+  padding: 0 1.5rem;
+  background-color: transparent;
+  border: 1px solid #eee;
+  line-height: 2rem;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #eee;
+}
