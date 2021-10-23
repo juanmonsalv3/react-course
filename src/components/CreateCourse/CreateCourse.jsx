@@ -1,6 +1,6 @@
 import './CreateCourse.css';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
@@ -8,6 +8,11 @@ import Button from '../../common/Button/Button';
 const CreateCourse = ({ authors }) => {
 	const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const [pickedAuthors, setPickedAuthors] = useState([]);
+
+	useEffect(() => {
+		setAvailableAuthors(authors);
+		setPickedAuthors([]);
+	}, [authors]);
 	return (
 		<div className='create-course-section'>
 			<Input
