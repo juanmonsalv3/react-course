@@ -23,6 +23,10 @@ const Courses = () => {
 			authors.find((author) => author.id === authorId)
 		);
 	};
+	const addAuthor = (author) => {
+		setAuthors([...authors, author]);
+		console.log(authors);
+	};
 
 	const onSearch = (term) => {
 		const includesTerm = (prop) => (prop || '').toLowerCase().includes(term);
@@ -61,7 +65,9 @@ const Courses = () => {
 				</div>
 			)}
 
-			{createCourseOpen && <CreateCourse authors={authors} />}
+			{createCourseOpen && (
+				<CreateCourse authors={authors} addAuthor={addAuthor} />
+			)}
 		</div>
 	);
 };

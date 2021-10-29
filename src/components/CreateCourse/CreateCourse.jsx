@@ -4,15 +4,35 @@ import React, { useState, useEffect } from 'react';
 
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
+import { generateId } from '../../helpers/uuid';
 
-const CreateCourse = ({ authors }) => {
+const CreateCourse = ({ authors, addAuthor }) => {
 	const [availableAuthors, setAvailableAuthors] = useState(authors);
 	const [pickedAuthors, setPickedAuthors] = useState([]);
+	const [newAuthorName, setNewAuthorName] = useState('');
 
 	useEffect(() => {
-		setAvailableAuthors(authors);
-		setPickedAuthors([]);
-	}, [authors]);
+		pickedAuthors.forEach((picked) => {
+			const index = authors.indexOf(picked);
+			if (index > -1) {
+				setAvailableAuthors(authors.slice(index, 1));
+			}
+		});
+	}, [authors, pickedAuthors]);
+
+	const onCreateAuthor = () => {
+		if (newAuthorName.length < 2) {
+			return;
+		}
+		const newAuthor = {
+			name: newAuthorName,
+			id: generateId(),
+		};
+		addAuthor(newAuthor);
+
+		setPickedAuthors([...pickedAuthors, newAuthor]);
+	};
+
 	return (
 		<div className='create-course-section'>
 			<Input
@@ -33,9 +53,10 @@ const CreateCourse = ({ authors }) => {
 						className='create-input'
 						labelText='Author Name'
 						placeholderText='Enter Author Name'
+						onChange={(e) => setNewAuthorName(e.target.value)}
 					/>
 					<div className='author-btn'>
-						<Button buttonText='Create Author' />
+						<Button buttonText='Create Author' onClick={onCreateAuthor} />
 					</div>
 					<h4>Duration</h4>
 					<Input
@@ -49,7 +70,7 @@ const CreateCourse = ({ authors }) => {
 					<h4>Authors</h4>
 					<ul>
 						{availableAuthors.map((author) => (
-							<li>
+							<li key={author.id}>
 								<div className='author-name'>{author.name}</div>
 								<div>
 									<Button buttonText='Add Author' />
@@ -62,7 +83,7 @@ const CreateCourse = ({ authors }) => {
 					{pickedAuthors.length === 0 && <span>Author list is empty</span>}
 					<ul>
 						{pickedAuthors.map((author) => (
-							<li>
+							<li key={author.id}>
 								<div className='author-name'>{author.name}</div>
 								<div>
 									<Button buttonText='Delete Author' />
