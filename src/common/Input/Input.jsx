@@ -1,10 +1,12 @@
 import './Input.css';
+import PropTypes from 'prop-types';
 import { generateId } from '../../helpers/uuid';
+import { inputTypes } from '../../constants';
 
 const Input = ({
 	labelText,
 	placeholderText,
-	inputType = 'text',
+	inputType = inputTypes.INPUT,
 	className = 'generic-input',
 	onChange = () => {},
 }) => {
@@ -29,6 +31,13 @@ const Input = ({
 			)}
 		</div>
 	);
+};
+
+Input.propTypes = {
+	labelText: PropTypes.string,
+	placeholderText: PropTypes.string,
+	inputType: PropTypes.oneOf(Object.values(inputTypes)),
+	className: PropTypes.string,
 };
 
 export default Input;

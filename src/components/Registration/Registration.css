@@ -1,0 +1,30 @@
+.registration-form {
+  width: 350px;
+  margin: 0 auto;
+}
+
+.registration-form .title {
+  font-weight: normal;
+}
+
+.registration-form p {
+  text-align: center;
+}
+
+.registration-input {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+.registration-input input {
+  width: 100%;
+  padding-left: 0.5rem;
+}
+
+.register-button {
+  display: block;
+}
+
+.errors-list {
+  line-height: 1rem;
+}

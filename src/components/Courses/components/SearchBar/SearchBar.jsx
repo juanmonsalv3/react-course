@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
 import './SearchBar.css';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+
 import Button from '../../../../common/Button/Button';
 import Input from '../../../../common/Input/Input';
 
@@ -29,6 +31,10 @@ const SearchBar = ({ onSearch }) => {
 			<Button buttonType='submit' buttonText='Search' onClick={onButtonClick} />
 		</form>
 	);
+};
+
+SearchBar.propTypes = {
+	onSearch: PropTypes.func,
 };
 
 export default SearchBar;
