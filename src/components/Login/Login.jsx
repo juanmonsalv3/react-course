@@ -1,7 +1,6 @@
 import '../Registration/Registration.css';
 
 import React, { useState } from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 
@@ -9,6 +8,7 @@ import { AUTH_TOKEN_KEY } from '../../constants';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
+import api from '../../api';
 
 const Login = ({ onLogin }) => {
 	const [formDetails, setFormDetails] = useState({});
@@ -25,10 +25,7 @@ const Login = ({ onLogin }) => {
 
 		e.preventDefault();
 		try {
-			const response = await axios.post(
-				'http://localhost:3000/login',
-				formDetails
-			);
+			const response = await api.login(formDetails);
 			if (response.status === 201) {
 				const authToken = response.data.result;
 				localStorage.setItem(AUTH_TOKEN_KEY, authToken);

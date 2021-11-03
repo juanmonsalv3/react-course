@@ -1,5 +1,6 @@
 import './Button.css';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { Link } from 'react-router-dom';
 
 import { buttonTypes } from '../../constants';
@@ -11,21 +12,18 @@ const Button = ({
 	url,
 	onClick = () => {},
 }) => {
+	const classNames = clsx('generic-button', className);
 	switch (buttonType) {
 		case buttonTypes.BUTTON:
 		case buttonTypes.SUBMIT:
 			return (
-				<button
-					type={buttonType}
-					className={'generic-button ' + className}
-					onClick={onClick}
-				>
+				<button type={buttonType} className={classNames} onClick={onClick}>
 					{buttonText}
 				</button>
 			);
 		case buttonTypes.LINK:
 			return (
-				<Link to={url} className={'generic-button ' + className}>
+				<Link to={url} className={classNames}>
 					{buttonText}
 				</Link>
 			);

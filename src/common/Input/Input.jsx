@@ -1,5 +1,6 @@
 import './Input.css';
 import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { generateId } from '../../helpers/uuid';
 import { inputTypes } from '../../constants';
 
@@ -7,12 +8,12 @@ const Input = ({
 	labelText,
 	placeholderText,
 	inputType = inputTypes.INPUT,
-	className = 'generic-input',
+	className,
 	onChange = () => {},
 }) => {
 	const id = generateId();
 	return (
-		<div className={className}>
+		<div className={clsx('generic-input', className)}>
 			{labelText && <label htmlFor={id}>{labelText}</label>}
 			{inputType === 'textarea' && (
 				<textarea
