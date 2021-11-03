@@ -1,0 +1,38 @@
+
+
+.course-title {
+  text-align: center;
+  font-weight: normal;
+}
+
+.course-description {
+  display: inline-block;
+  width: 55%;
+  font-size: 1.2rem;
+}
+
+.course-props {
+  box-sizing: border-box;
+  display: inline-block;
+  width: 45%;
+  padding-left: 5rem;
+}
+
+dt, dd {
+  display: inline-block;
+  line-height: 1.5rem;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dd {
+  margin-left: 0.5rem;
+}
+
+.course-info ul, .course-info li{
+  margin: 0;
+  padding: 0;
+  line-height: 1.5rem;
+}

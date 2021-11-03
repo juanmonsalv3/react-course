@@ -1,16 +1,19 @@
 import './Input.css';
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
 import { generateId } from '../../helpers/uuid';
+import { inputTypes } from '../../constants';
 
 const Input = ({
 	labelText,
 	placeholderText,
-	inputType = 'text',
-	className = 'generic-input',
+	inputType = inputTypes.INPUT,
+	className,
 	onChange = () => {},
 }) => {
 	const id = generateId();
 	return (
-		<div className={className}>
+		<div className={clsx('generic-input', className)}>
 			{labelText && <label htmlFor={id}>{labelText}</label>}
 			{inputType === 'textarea' && (
 				<textarea
@@ -29,6 +32,13 @@ const Input = ({
 			)}
 		</div>
 	);
+};
+
+Input.propTypes = {
+	labelText: PropTypes.string,
+	placeholderText: PropTypes.string,
+	inputType: PropTypes.oneOf(Object.values(inputTypes)),
+	className: PropTypes.string,
 };
 
 export default Input;

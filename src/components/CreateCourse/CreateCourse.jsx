@@ -1,100 +1,101 @@
 import './CreateCourse.css';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import moment from 'moment';
 
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
+import CreateAuthor from './components/CreateAuthor';
+import AuthorSelection from './components/AuthorSelection';
+import { formatTime } from '../../helpers/dateGenerator';
 import { generateId } from '../../helpers/uuid';
 
-const CreateCourse = ({ authors, addAuthor }) => {
-	const [availableAuthors, setAvailableAuthors] = useState(authors);
-	const [pickedAuthors, setPickedAuthors] = useState([]);
-	const [newAuthorName, setNewAuthorName] = useState('');
+const CreateCourse = ({ authors, addAuthor, onAddCourse }) => {
+	const [courseData, setCourseData] = useState({ authors: [] });
 
-	useEffect(() => {
-		pickedAuthors.forEach((picked) => {
-			const index = authors.indexOf(picked);
-			if (index > -1) {
-				setAvailableAuthors(authors.slice(index, 1));
-			}
-		});
-	}, [authors, pickedAuthors]);
+	const addCourseData = (key, value) => {
+		setCourseData({ ...courseData, [key]: value });
+	};
 
-	const onCreateAuthor = () => {
-		if (newAuthorName.length < 2) {
-			return;
-		}
-		const newAuthor = {
-			name: newAuthorName,
-			id: generateId(),
-		};
+	const onCreateAuthor = (newAuthor) => {
 		addAuthor(newAuthor);
+		pickAuthor(newAuthor);
+	};
 
-		setPickedAuthors([...pickedAuthors, newAuthor]);
+	const pickAuthor = (pickedAuthor) => {
+		addCourseData('authors', [...courseData.authors, pickedAuthor]);
+	};
+
+	const unpickAuthor = (pickedAuthor) => {
+		addCourseData(
+			'authors',
+			courseData.authors.filter((author) => author !== pickedAuthor)
+		);
+	};
+
+	const addCourse = () => {
+		onAddCourse({
+			...courseData,
+			id: generateId(),
+			creationDate: moment().format('DD/MM/yyyy'),
+			authors: courseData.authors.map((a) => a.id),
+		});
 	};
 
 	return (
 		<div className='create-course-section'>
+			<Button
+				buttonText='Create Course'
+				className='create-course-btn'
+				onClick={addCourse}
+			/>
 			<Input
 				className='create-input'
 				labelText='Title'
 				placeholderText='Enter Title'
+				onChange={(e) => addCourseData('title', e.target.value)}
 			/>
 			<Input
 				className='create-input'
 				labelText='Description'
 				inputType='textarea'
 				placeholderText='Enter Description'
+				onChange={(e) => addCourseData('description', e.target.value)}
 			/>
 			<div className='author-section'>
 				<div className='left-section'>
-					<h4>Add Author</h4>
-					<Input
-						className='create-input'
-						labelText='Author Name'
-						placeholderText='Enter Author Name'
-						onChange={(e) => setNewAuthorName(e.target.value)}
-					/>
-					<div className='author-btn'>
-						<Button buttonText='Create Author' onClick={onCreateAuthor} />
-					</div>
+					<CreateAuthor onCreateAuthor={onCreateAuthor} />
 					<h4>Duration</h4>
 					<Input
 						className='create-input'
 						labelText='Duration'
 						placeholderText='Enter Duration in minutes'
 						inputType='number'
+						onChange={(e) => addCourseData('duration', +e.target.value)}
 					/>
+					<p>Duration {formatTime(courseData.duration)} hours</p>
 				</div>
-				<div className='authors-list'>
-					<h4>Authors</h4>
-					<ul>
-						{availableAuthors.map((author) => (
-							<li key={author.id}>
-								<div className='author-name'>{author.name}</div>
-								<div>
-									<Button buttonText='Add Author' />
-								</div>
-							</li>
-						))}
-					</ul>
-
-					<h4>Course Authors</h4>
-					{pickedAuthors.length === 0 && <span>Author list is empty</span>}
-					<ul>
-						{pickedAuthors.map((author) => (
-							<li key={author.id}>
-								<div className='author-name'>{author.name}</div>
-								<div>
-									<Button buttonText='Delete Author' />
-								</div>
-							</li>
-						))}
-					</ul>
-				</div>
+				<AuthorSelection
+					authors={authors}
+					pickedAuthors={courseData.authors}
+					pickAuthor={pickAuthor}
+					unpickAuthor={unpickAuthor}
+				/>
 			</div>
 		</div>
 	);
+};
+
+CreateCourse.propTypes = {
+	authors: PropTypes.arrayOf(
+		PropTypes.shape({
+			id: PropTypes.string,
+			name: PropTypes.string,
+		})
+	),
+	addAuthor: PropTypes.func,
+	onAddCourse: PropTypes.func,
 };
 
 export default CreateCourse;
