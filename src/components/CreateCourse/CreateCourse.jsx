@@ -1,54 +1,57 @@
 import './CreateCourse.css';
 
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Link, useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import CreateAuthor from './components/CreateAuthor';
 import AuthorSelection from './components/AuthorSelection';
 import { formatTime } from '../../helpers/dateGenerator';
-import { generateId } from '../../helpers/uuid';
+import { addAuthor } from '../../store/authors/actionCreators';
+import { addCourse } from '../../store/courses/actionCreators';
 
-const CreateCourse = ({ authors, addAuthor, onAddCourse }) => {
+const CreateCourse = () => {
 	const [courseData, setCourseData] = useState({ authors: [] });
+	const dispatch = useDispatch();
+	const history = useHistory();
 
 	const addCourseData = (key, value) => {
 		setCourseData({ ...courseData, [key]: value });
 	};
 
 	const onCreateAuthor = (newAuthor) => {
-		addAuthor(newAuthor);
+		dispatch(addAuthor(newAuthor));
 		pickAuthor(newAuthor);
 	};
 
 	const pickAuthor = (pickedAuthor) => {
-		addCourseData('authors', [...courseData.authors, pickedAuthor]);
+		addCourseData('authors', [...courseData.authors, pickedAuthor.id]);
 	};
 
 	const unpickAuthor = (pickedAuthor) => {
 		addCourseData(
 			'authors',
-			courseData.authors.filter((author) => author !== pickedAuthor)
+			courseData.authors.filter((author) => author !== pickedAuthor.id)
 		);
 	};
 
-	const addCourse = () => {
-		onAddCourse({
-			...courseData,
-			id: generateId(),
-			creationDate: moment().format('DD/MM/yyyy'),
-			authors: courseData.authors.map((a) => a.id),
-		});
+	const onAddCourse = () => {
+		dispatch(addCourse(courseData));
+		history.push('/courses');
 	};
 
 	return (
 		<div className='create-course-section'>
+			<p>
+				<Link to='/courses'>{'< Back to Courses'}</Link>
+			</p>
 			<Button
 				buttonText='Create Course'
 				className='create-course-btn'
-				onClick={addCourse}
+				onClick={onAddCourse}
 			/>
 			<Input
 				className='create-input'
@@ -77,7 +80,6 @@ const CreateCourse = ({ authors, addAuthor, onAddCourse }) => {
 					<p>Duration {formatTime(courseData.duration)} hours</p>
 				</div>
 				<AuthorSelection
-					authors={authors}
 					pickedAuthors={courseData.authors}
 					pickAuthor={pickAuthor}
 					unpickAuthor={unpickAuthor}

@@ -2,18 +2,25 @@ import '../Registration/Registration.css';
 
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
-
-import { AUTH_TOKEN_KEY } from '../../constants';
+import { Link, Redirect } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
-import api from '../../api';
+import { useDispatch } from 'react-redux';
+import { tokenAdded } from '../../store/user/actionCreators';
+import { selectIsAuthenticated } from '../../store/user/selectors';
+import api from '../../store/services';
 
-const Login = ({ onLogin }) => {
+const Login = () => {
 	const [formDetails, setFormDetails] = useState({});
 	const [errors, setErrors] = useState([]);
-	const history = useHistory();
+	const isAuth = useSelector(selectIsAuthenticated);
+	const dispatch = useDispatch();
+
+	if (isAuth) {
+		return <Redirect to='/courses' />;
+	}
 
 	const updateFormDetails = (key, e) => {
 		setErrors([]);
@@ -28,12 +35,16 @@ const Login = ({ onLogin }) => {
 			const response = await api.login(formDetails);
 			if (response.status === 201) {
 				const authToken = response.data.result;
-				localStorage.setItem(AUTH_TOKEN_KEY, authToken);
-				onLogin(authToken);
-				history.push('/courses');
+				dispatch(tokenAdded(authToken));
 			}
 		} catch (error) {
-			setErrors(error.response.data.errors);
+			if (error.response && error.response.data && error.response.data.errors) {
+				setErrors(error.response.data.errors);
+			} else if (error.response.data && error.response.data.result) {
+				setErrors([error.response.data.result]);
+			} else {
+				setErrors(['Unknown error, try again later']);
+			}
 		}
 	};
 
@@ -75,6 +86,11 @@ const Login = ({ onLogin }) => {
 					</ul>
 				</>
 			)}
+
+			<p>
+				If you don't have an account,
+				<Link to='/registration'>Register here</Link>
+			</p>
 		</form>
 	);
 };

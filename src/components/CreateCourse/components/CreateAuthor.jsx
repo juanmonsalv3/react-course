@@ -14,6 +14,7 @@ const CreateAuthor = ({ onCreateAuthor }) => {
 				id: generateId(),
 			};
 			onCreateAuthor(newAuthor);
+			setNewAuthorName('');
 		}
 	};
 
@@ -25,6 +26,7 @@ const CreateAuthor = ({ onCreateAuthor }) => {
 				labelText='Author Name'
 				placeholderText='Enter Author Name'
 				onChange={(e) => setNewAuthorName(e.target.value)}
+				value={newAuthorName}
 			/>
 			<div className='author-btn'>
 				<Button buttonText='Create Author' onClick={onButtonClick} />

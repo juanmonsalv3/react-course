@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Button from '../../../common/Button/Button';
+import { useSelector } from 'react-redux';
+import { selectAuthors } from '../../../store/authors/selectors';
 
-const AuthorSelection = ({
-	authors,
-	pickedAuthors = [],
-	pickAuthor,
-	unpickAuthor,
-}) => {
-	const [availableAuthors, setAvailableAuthors] = useState(authors);
+const AuthorSelection = ({ pickedAuthors = [], pickAuthor, unpickAuthor }) => {
+	const allAuthors = useSelector(selectAuthors);
+	const [availableAuthors, setAvailableAuthors] = useState(allAuthors);
 
 	useEffect(() => {
-		const avAuthors = authors.filter((a) => !pickedAuthors.includes(a));
-		setAvailableAuthors(avAuthors);
-	}, [authors, pickedAuthors]);
+		const availableAuthors = allAuthors.filter(
+			(author) => !pickedAuthors.includes(author.id)
+		);
+		setAvailableAuthors(availableAuthors);
+	}, [allAuthors, pickedAuthors]);
 
 	return (
 		<div className='authors-list'>
@@ -35,30 +35,27 @@ const AuthorSelection = ({
 			<h4>Course Authors</h4>
 			{pickedAuthors.length === 0 && <span>Author list is empty</span>}
 			<ul>
-				{pickedAuthors.map((author) => (
-					<li key={author.id}>
-						<div className='author-name'>{author.name}</div>
-						<div>
-							<Button
-								buttonText='Delete Author'
-								onClick={() => unpickAuthor(author)}
-							/>
-						</div>
-					</li>
-				))}
+				{pickedAuthors.map((authorId) => {
+					const author = allAuthors.find((a) => a.id === authorId);
+					return (
+						<li key={author.id}>
+							<div className='author-name'>{author.name}</div>
+							<div>
+								<Button
+									buttonText='Delete Author'
+									onClick={() => unpickAuthor(author)}
+								/>
+							</div>
+						</li>
+					);
+				})}
 			</ul>
 		</div>
 	);
 };
 
-const authorShape = PropTypes.shape({
-	id: PropTypes.string,
-	name: PropTypes.string,
-});
-
 AuthorSelection.propTypes = {
-	authors: PropTypes.arrayOf(authorShape),
-	pickedAuthors: PropTypes.arrayOf(authorShape),
+	pickedAuthors: PropTypes.arrayOf(PropTypes.string),
 	pickAuthor: PropTypes.func,
 	unpickAuthor: PropTypes.func,
 };

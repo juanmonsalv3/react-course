@@ -1,48 +1,42 @@
 import './Courses.css';
+
 import React, { useState, useEffect } from 'react';
-import { Route, useHistory } from 'react-router-dom';
-import { mockedAuthorsList, mockedCoursesList } from '../../mockData';
+import { useDispatch, useSelector } from 'react-redux';
+import { Route, Switch } from 'react-router-dom';
+
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import Button from '../../common/Button/Button';
 import CreateCourse from '../CreateCourse/CreateCourse';
-import { buttonTypes } from '../../constants';
 import CourseInfo from '../CourseInfo/CourseInfo';
-import { getCourseAuthors } from '../../helpers/authors';
+import loginRequired from '../../common/loginRequired';
+import { fetchCourses } from '../../store/courses/actionCreators';
+import { buttonTypes } from '../../constants';
+import { selectCourses } from '../../store/courses/selectors';
+import { fetchAuthors } from '../../store/authors/actionCreators';
 
 const Courses = () => {
-	const history = useHistory();
-	const [allCourses, setAllCourses] = useState([]);
-	const [courses, setCourses] = useState([]);
-	const [authors, setAuthors] = useState([]);
+	const allCourses = useSelector(selectCourses);
+	const [searchTerm, setSearchTerm] = useState('');
+
+	const dispatch = useDispatch();
 
 	useEffect(() => {
-		setAllCourses(mockedCoursesList);
-		setCourses(mockedCoursesList);
-		setAuthors(mockedAuthorsList);
-	}, []);
+		dispatch(fetchCourses);
+		dispatch(fetchAuthors);
+	}, [dispatch]);
 
-	const addAuthor = (author) => {
-		setAuthors([...authors, author]);
-	};
+	const includesTerm = (prop) =>
+		(prop || '').toLowerCase().includes(searchTerm);
+
+	const filteredCourses = allCourses.filter((c) => {
+		return (
+			includesTerm(c.title) || includesTerm(c.description) || includesTerm(c.id)
+		);
+	});
 
 	const onSearch = (term) => {
-		const includesTerm = (prop) => (prop || '').toLowerCase().includes(term);
-
-		const filteredCourses = allCourses.filter((c) => {
-			return (
-				includesTerm(c.title) ||
-				includesTerm(c.description) ||
-				includesTerm(c.id)
-			);
-		});
-
-		setCourses(filteredCourses);
-	};
-
-	const onAddCourse = (newCourse) => {
-		setCourses([...courses, newCourse]);
-		history.push('/courses');
+		setSearchTerm(term);
 	};
 
 	return (
@@ -59,40 +53,21 @@ const Courses = () => {
 							url='/courses/add'
 						/>
 						<SearchBar onSearch={onSearch} {...props} />
-						{courses.length === 0 && <div>No Courses to show</div>}
+						{filteredCourses.length === 0 && <div>No Courses to show</div>}
 						<div className='courses-list'>
-							{courses.map((course) => (
-								<CourseCard
-									course={course}
-									authors={getCourseAuthors(authors, course)}
-									key={course.id}
-								/>
+							{filteredCourses.map((course) => (
+								<CourseCard {...course} key={course.id} />
 							))}
 						</div>
 					</>
 				)}
 			/>
-
-			<Route
-				path='/courses/add'
-				render={(props) => (
-					<CreateCourse
-						{...props}
-						authors={authors}
-						addAuthor={addAuthor}
-						onAddCourse={onAddCourse}
-					/>
-				)}
-			/>
-
-			<Route
-				path='/courses/:courseId'
-				render={(props) => {
-					return <CourseInfo {...props} courses={courses} authors={authors} />;
-				}}
-			/>
+			<Switch>
+				<Route exact path='/courses/add' component={CreateCourse} />
+				<Route path='/courses/:courseId' component={CourseInfo} />
+			</Switch>
 		</div>
 	);
 };
 
-export default Courses;
+export default loginRequired(Courses);

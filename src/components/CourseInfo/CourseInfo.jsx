@@ -1,16 +1,23 @@
 import './CourseInfo.css';
-import { Link, useParams } from 'react-router-dom';
+
+import { useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
+import { Link, useParams } from 'react-router-dom';
+
 import { formatTime } from '../../helpers/dateGenerator';
 import { getCourseAuthors } from '../../helpers/authors';
+import { selectCourses } from '../../store/courses/selectors';
+import { selectAuthors } from '../../store/authors/selectors';
 
-const CourseInfo = ({ courses, authors }) => {
+const CourseInfo = () => {
 	const { courseId } = useParams();
+	const courses = useSelector(selectCourses);
+	const authors = useSelector(selectAuthors);
 	const course = courses.find((c) => c.id === courseId);
 
 	const getBackButton = () => <Link to='/courses'>{'< Back to Courses'}</Link>;
 
-	if (!course) {
+	if (!course || authors.length === 0) {
 		return (
 			<>
 				{getBackButton()}
