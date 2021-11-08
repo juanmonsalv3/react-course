@@ -1,18 +1,39 @@
 import './CourseCard.css';
+
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
+
 import { formatTime } from '../../../../helpers/dateGenerator';
 import { buttonTypes } from '../../../../constants';
+import { selectAuthors } from '../../../../store/authors/selectors';
+
 import Button from '../../../../common/Button/Button';
 
-const CourseCard = ({ course, authors }) => {
+const CourseCard = ({
+	id,
+	title,
+	description,
+	duration,
+	creationDate,
+	authors,
+}) => {
+	const allAuthors = useSelector(selectAuthors);
+
+	const courseAuthors =
+		allAuthors.length > 0
+			? authors.map((authorId) =>
+					allAuthors.find((author) => author.id === authorId)
+			  )
+			: [];
+
 	const getAuthorsElement = () =>
-		authors.map((author) => author.name).join(', ');
+		courseAuthors.map((author) => author.name).join(', ');
 
 	return (
 		<div className='course-card'>
 			<div className='main-section'>
-				<h2 className='course-title'>{course.title}</h2>
-				<p>{course.description}</p>
+				<h2 className='course-title'>{title}</h2>
+				<p>{description}</p>
 			</div>
 			<div className='side-section'>
 				<p>
@@ -21,15 +42,15 @@ const CourseCard = ({ course, authors }) => {
 				</p>
 				<p>
 					<b>Duration: </b>
-					{formatTime(course.duration)} hours
+					{formatTime(duration)} hours
 				</p>
 				<p>
-					<b>Created: </b> {course.creationDate}
+					<b>Created: </b> {creationDate}
 				</p>
 				<Button
 					buttonType={buttonTypes.LINK}
 					buttonText='Show Course'
-					url={`/courses/${course.id}`}
+					url={`/courses/${id}`}
 				/>
 			</div>
 		</div>
@@ -37,19 +58,11 @@ const CourseCard = ({ course, authors }) => {
 };
 
 CourseCard.propTypes = {
-	course: PropTypes.shape({
-		id: PropTypes.string,
-		title: PropTypes.string,
-		description: PropTypes.string,
-		duration: PropTypes.number,
-		authors: PropTypes.arrayOf(PropTypes.string),
-	}),
-	authors: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.string,
-			name: PropTypes.string,
-		})
-	),
+	id: PropTypes.string,
+	title: PropTypes.string,
+	description: PropTypes.string,
+	duration: PropTypes.number,
+	authors: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default CourseCard;

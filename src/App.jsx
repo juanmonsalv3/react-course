@@ -1,51 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Header from './components/Header/Header';
 import Courses from './components/Courses/Courses';
 import Registration from './components/Registration/Registration';
 import Login from './components/Login/Login';
-import { AUTH_TOKEN_KEY } from './constants';
-import api from './api';
+import api from './store/services';
+import { selectAuthToken } from './store/user/selectors';
+import { userLoggedIn } from './store/user/actionCreators';
 
 function App() {
-	const [userInfo, setUserInfo] = useState(null);
-	const [authToken, setAuthToken] = useState(
-		localStorage.getItem(AUTH_TOKEN_KEY)
-	);
+	const authToken = useSelector(selectAuthToken);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		if (authToken) {
-			api.getUserInfo(authToken).then(setUserInfo);
+			api.getUserInfo(authToken).then((userInfo) => {
+				dispatch(userLoggedIn(userInfo));
+			});
 		}
-	}, [authToken]);
-
-	const onLogout = () => {
-		setUserInfo(null);
-		setAuthToken(null);
-		localStorage.removeItem(AUTH_TOKEN_KEY);
-	};
+	}, [dispatch, authToken]);
 
 	return (
 		<BrowserRouter>
-			<Route
-				path='/'
-				render={(props) => (
-					<Header
-						{...props}
-						userInfo={userInfo}
-						authToken={authToken}
-						onLogout={onLogout}
-					/>
-				)}
-			/>
+			<Route path='/' component={Header} />
 			<Switch>
-				<Route path='/courses' component={Courses} />
+				<Route path='/login' component={Login} />
 				<Route path='/registration' component={Registration} />
-				<Route
-					path='/login'
-					render={(props) => <Login {...props} onLogin={setAuthToken} />}
-				/>
+				<Route path='/courses' component={Courses} />
 			</Switch>
 		</BrowserRouter>
 	);

@@ -1,9 +1,11 @@
 import './Registration.css';
+
+import React, { useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
+
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
-import { Link, useHistory } from 'react-router-dom';
-import React, { useState } from 'react';
-import api from '../../api';
+import api from '../../store/services';
 
 const Registration = () => {
 	const [formDetails, setFormDetails] = useState({});
@@ -20,7 +22,6 @@ const Registration = () => {
 
 		e.preventDefault();
 		try {
-			api.register(formDetails);
 			const response = await api.register(formDetails);
 			if (response.status === 201) {
 				history.push('/login');

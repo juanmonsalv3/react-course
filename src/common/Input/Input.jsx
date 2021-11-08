@@ -9,6 +9,7 @@ const Input = ({
 	placeholderText,
 	inputType = inputTypes.INPUT,
 	className,
+	value,
 	onChange = () => {},
 }) => {
 	const id = generateId();
@@ -16,11 +17,9 @@ const Input = ({
 		<div className={clsx('generic-input', className)}>
 			{labelText && <label htmlFor={id}>{labelText}</label>}
 			{inputType === 'textarea' && (
-				<textarea
-					id={id}
-					placeholder={placeholderText}
-					onChange={onChange}
-				></textarea>
+				<textarea id={id} placeholder={placeholderText} onChange={onChange}>
+					{value}
+				</textarea>
 			)}
 			{inputType !== 'textarea' && (
 				<input
@@ -28,6 +27,7 @@ const Input = ({
 					placeholder={placeholderText}
 					type={inputType}
 					onChange={onChange}
+					value={value}
 				/>
 			)}
 		</div>

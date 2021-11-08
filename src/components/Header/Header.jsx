@@ -1,28 +1,25 @@
-import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useLocation, useHistory } from 'react-router-dom';
 
 import './Header.css';
 
 import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectUser } from '../../store/user/selectors';
+import { userLoggedOut } from '../../store/user/actionCreators';
 
-const Header = ({ userInfo, authToken, onLogout }) => {
-	const location = useLocation();
-	const history = useHistory();
+const Header = () => {
+	const userInfo = useSelector(selectUser);
+	const dispatch = useDispatch();
 
-	useEffect(() => {
-		if (!authToken && location.pathname !== '/login') {
-			history.push('/login');
-		} else if (location.pathname === '/' && authToken) {
-			history.push('/courses');
-		}
-	}, [authToken, location, history]);
+	const onLogout = () => {
+		dispatch(userLoggedOut());
+	};
 
 	return (
 		<header className='header'>
 			<Logo />
-			{userInfo && (
+			{userInfo.isAuth && (
 				<div className='header__right-pane'>
 					<div className='username'>{userInfo.name}</div>
 					<Button
