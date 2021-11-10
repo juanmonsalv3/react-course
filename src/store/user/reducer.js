@@ -7,27 +7,30 @@ const userInitialState = {
 	email: '', // default value - empty string. After success login - email of user
 	token: localStorage.getItem(AUTH_TOKEN_KEY) || '', // default value - empty string or token value from localStorage.
 	// After success login - value from API /login response. See Swagger.
+	role: '',
+	authErrors: [],
 };
 
 const userReducer = (state = userInitialState, action) => {
 	switch (action.type) {
 		case actions.TOKEN_ADDED:
-			const { token } = action.payload;
-			localStorage.setItem(AUTH_TOKEN_KEY, token);
+			localStorage.setItem(AUTH_TOKEN_KEY, action.payload);
 			return {
 				...state,
-				token,
+				token: action.payload,
 			};
 		case actions.USER_LOGGED:
-			const { userInfo } = action.payload;
+			const userInfo = action.payload;
 			return {
 				...state,
 				...userInfo,
-				isAuth: !!userInfo,
+				isAuth: !!userInfo && userInfo.email,
 			};
 		case actions.USER_LOGOUT:
 			localStorage.removeItem(AUTH_TOKEN_KEY);
-			return { ...userInitialState, isAuth: false };
+			return { ...userInitialState, isAuth: false, token: '' };
+		case actions.AUTH_ERRORS:
+			return { ...state, authErrors: [...action.payload] };
 		default:
 			return state;
 	}

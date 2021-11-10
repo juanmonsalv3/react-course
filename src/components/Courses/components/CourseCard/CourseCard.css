@@ -1,33 +1,45 @@
 .course-card {
-  /* border: 1px solid red; */
-  margin-bottom: 1rem;
-  border: 0.5px solid green;
+	/* border: 1px solid red; */
+	margin-bottom: 1rem;
+	border: 0.5px solid green;
 }
 
-.main-section, .side-section {
-  display: inline-block;
-  vertical-align: top;
-  box-sizing: border-box;
-  padding: 1rem;
-}
-
-.main-section {
-  width: 60%;
-  padding-right: 5rem;
-}
-
-.course-title {
-  margin: 0;
-}
-
+.course-card .main-section,
 .side-section {
-  width: 40%;
+	display: inline-block;
+	vertical-align: top;
+	box-sizing: border-box;
+	padding: 1rem;
 }
 
-.side-section p {
-  margin: 0.5rem 0;
+.course-card .main-section {
+	width: 60%;
+	padding-right: 5rem;
 }
 
-button {
-  margin: auto;
+.course-card .course-title {
+	margin: 0;
+}
+
+.course-card .side-section {
+	width: 40%;
+}
+
+.course-card .side-section p {
+	margin: 0.5rem 0;
+}
+
+.course-card button {
+	margin: auto;
+}
+
+.course-card .generic-button {
+	padding: 0 5px;
+	margin-right: 10px;
+}
+
+.course-card .btn-img {
+	width: 28px;
+	vertical-align: middle;
+	padding: 0;
 }

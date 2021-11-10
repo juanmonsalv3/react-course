@@ -17,9 +17,12 @@ const Input = ({
 		<div className={clsx('generic-input', className)}>
 			{labelText && <label htmlFor={id}>{labelText}</label>}
 			{inputType === 'textarea' && (
-				<textarea id={id} placeholder={placeholderText} onChange={onChange}>
-					{value}
-				</textarea>
+				<textarea
+					id={id}
+					placeholder={placeholderText}
+					onChange={onChange}
+					value={value}
+				/>
 			)}
 			{inputType !== 'textarea' && (
 				<input

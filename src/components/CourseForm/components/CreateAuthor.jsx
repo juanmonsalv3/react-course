@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
+
 import Button from '../../../common/Button/Button';
 import Input from '../../../common/Input/Input';
-import { generateId } from '../../../helpers/uuid';
+import { addAuthorThunk } from '../../../store/authors/thunks';
 
-const CreateAuthor = ({ onCreateAuthor }) => {
+const CreateAuthor = () => {
 	const [newAuthorName, setNewAuthorName] = useState('');
+	const dispatch = useDispatch();
 
 	const onButtonClick = () => {
 		if (newAuthorName.length > 1) {
-			const newAuthor = {
-				name: newAuthorName,
-				id: generateId(),
-			};
-			onCreateAuthor(newAuthor);
+			dispatch(addAuthorThunk(newAuthorName));
 			setNewAuthorName('');
 		}
 	};

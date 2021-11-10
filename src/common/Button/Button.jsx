@@ -9,6 +9,7 @@ const Button = ({
 	buttonType = buttonTypes.BUTTON,
 	buttonText,
 	className,
+	children,
 	url,
 	onClick = () => {},
 }) => {
@@ -19,12 +20,14 @@ const Button = ({
 			return (
 				<button type={buttonType} className={classNames} onClick={onClick}>
 					{buttonText}
+					{children}
 				</button>
 			);
 		case buttonTypes.LINK:
 			return (
 				<Link to={url} className={classNames}>
 					{buttonText}
+					{children}
 				</Link>
 			);
 		default:
@@ -34,7 +37,7 @@ const Button = ({
 
 Button.propTypes = {
 	buttonType: PropTypes.oneOf(Object.values(buttonTypes)),
-	buttonText: PropTypes.string.isRequired,
+	buttonText: PropTypes.string,
 	className: PropTypes.string,
 	url: PropTypes.string,
 };

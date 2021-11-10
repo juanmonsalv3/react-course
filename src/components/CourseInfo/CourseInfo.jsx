@@ -13,6 +13,7 @@ const CourseInfo = () => {
 	const { courseId } = useParams();
 	const courses = useSelector(selectCourses);
 	const authors = useSelector(selectAuthors);
+
 	const course = courses.find((c) => c.id === courseId);
 
 	const getBackButton = () => <Link to='/courses'>{'< Back to Courses'}</Link>;

@@ -1,30 +1,40 @@
-import './CreateCourse.css';
+import './CourseForm.css';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link, useHistory } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import { Link, useHistory, useParams } from 'react-router-dom';
 
 import Input from '../../common/Input/Input';
 import Button from '../../common/Button/Button';
 import CreateAuthor from './components/CreateAuthor';
 import AuthorSelection from './components/AuthorSelection';
 import { formatTime } from '../../helpers/dateGenerator';
-import { addAuthor } from '../../store/authors/actionCreators';
-import { addCourse } from '../../store/courses/actionCreators';
+import { addCourseThunk, updateCourseThunk } from '../../store/courses/thunks';
+import { useSelector } from 'react-redux';
+import { selectCourses } from '../../store/courses/selectors';
 
-const CreateCourse = () => {
-	const [courseData, setCourseData] = useState({ authors: [] });
+const CourseForm = () => {
+	const { courseId } = useParams();
+	const courses = useSelector(selectCourses);
+
+	let foundCourse;
+	if (courseId) {
+		foundCourse = courses.find((c) => c.id === courseId);
+	}
+
+	const [totalCourses] = useState(courses.length);
+	const [courseData, setCourseData] = useState(foundCourse || { authors: [] });
 	const dispatch = useDispatch();
 	const history = useHistory();
 
+	useEffect(() => {
+		if (courses.length !== totalCourses) {
+			history.push('/courses');
+		}
+	}, [courses, totalCourses, history]);
+
 	const addCourseData = (key, value) => {
 		setCourseData({ ...courseData, [key]: value });
-	};
-
-	const onCreateAuthor = (newAuthor) => {
-		dispatch(addAuthor(newAuthor));
-		pickAuthor(newAuthor);
 	};
 
 	const pickAuthor = (pickedAuthor) => {
@@ -38,9 +48,17 @@ const CreateCourse = () => {
 		);
 	};
 
-	const onAddCourse = () => {
-		dispatch(addCourse(courseData));
-		history.push('/courses');
+	const onSaveCourse = () => {
+		if (courseData.authors.length === 0) {
+			return;
+		}
+
+		if (courseId) {
+			dispatch(updateCourseThunk(courseData));
+			history.push('/courses');
+		} else {
+			dispatch(addCourseThunk(courseData));
+		}
 	};
 
 	return (
@@ -49,32 +67,35 @@ const CreateCourse = () => {
 				<Link to='/courses'>{'< Back to Courses'}</Link>
 			</p>
 			<Button
-				buttonText='Create Course'
+				buttonText={`${courseId ? 'Update' : 'Create'} Course`}
 				className='create-course-btn'
-				onClick={onAddCourse}
+				onClick={onSaveCourse}
 			/>
 			<Input
-				className='create-input'
+				className='create-input input-title'
 				labelText='Title'
 				placeholderText='Enter Title'
+				value={courseData.title}
 				onChange={(e) => addCourseData('title', e.target.value)}
 			/>
 			<Input
-				className='create-input'
+				className='create-input input-description'
 				labelText='Description'
 				inputType='textarea'
 				placeholderText='Enter Description'
+				value={courseData.description}
 				onChange={(e) => addCourseData('description', e.target.value)}
 			/>
 			<div className='author-section'>
 				<div className='left-section'>
-					<CreateAuthor onCreateAuthor={onCreateAuthor} />
+					<CreateAuthor />
 					<h4>Duration</h4>
 					<Input
 						className='create-input'
 						labelText='Duration'
 						placeholderText='Enter Duration in minutes'
 						inputType='number'
+						value={courseData.duration}
 						onChange={(e) => addCourseData('duration', +e.target.value)}
 					/>
 					<p>Duration {formatTime(courseData.duration)} hours</p>
@@ -89,15 +110,4 @@ const CreateCourse = () => {
 	);
 };
 
-CreateCourse.propTypes = {
-	authors: PropTypes.arrayOf(
-		PropTypes.shape({
-			id: PropTypes.string,
-			name: PropTypes.string,
-		})
-	),
-	addAuthor: PropTypes.func,
-	onAddCourse: PropTypes.func,
-};
-
-export default CreateCourse;
+export default CourseForm;

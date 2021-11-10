@@ -1,19 +1,21 @@
 .generic-input {
-  display: inline-block;
+	display: inline-block;
+	vertical-align: top;
+}
+.generic-input input,
+.generic-input textarea {
+	width: 100%;
+	border: 0.5px solid #ccc;
+	line-height: 1.9rem;
+	margin-right: 1rem;
+	padding-left: 0.5rem;
 }
 
-label {
-  display: block;
-  margin-bottom: 0.5rem;
+.generic-input input:focus,
+.generic-input textarea:focus {
+	border: none;
 }
-
-input, textarea {
-  border: 0.5px solid #ccc;
-  line-height: 1.9rem;
-  margin-right: 1rem;
-  padding-left: 0.5rem;
-}
-
-input:focus, textarea:focus{
-  border: none;
+.generic-input label {
+	display: block;
+	margin-bottom: 0.5rem;
 }
