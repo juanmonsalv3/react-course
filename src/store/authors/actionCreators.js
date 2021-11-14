@@ -1,16 +1,11 @@
-import api from '../services';
 import * as actions from './actionTypes';
 
-export async function fetchAuthors(dispatch, getState) {
-	try {
-		const response = await api.fetchAuthors();
-		dispatch({ type: actions.FETCH_AUTHORS, payload: response.data.result });
-	} catch (error) {
-		console.error(error);
-	}
-}
+export const fetchAuthorsAction = (authors) => ({
+	type: actions.FETCH_AUTHORS,
+	payload: authors,
+});
 
-export const addAuthor = (author) => ({
+export const addAuthorAction = (author) => ({
 	type: actions.ADD_AUTHOR,
 	payload: author,
 });

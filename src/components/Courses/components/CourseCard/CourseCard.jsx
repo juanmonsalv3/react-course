@@ -8,6 +8,8 @@ import { buttonTypes } from '../../../../constants';
 import { selectAuthors } from '../../../../store/authors/selectors';
 
 import Button from '../../../../common/Button/Button';
+import { useDispatch } from 'react-redux';
+import { deleteCourseThunk } from '../../../../store/courses/thunks';
 
 const CourseCard = ({
 	id,
@@ -18,6 +20,7 @@ const CourseCard = ({
 	authors,
 }) => {
 	const allAuthors = useSelector(selectAuthors);
+	const dispatch = useDispatch();
 
 	const courseAuthors =
 		allAuthors.length > 0
@@ -28,6 +31,10 @@ const CourseCard = ({
 
 	const getAuthorsElement = () =>
 		courseAuthors.map((author) => author.name).join(', ');
+
+	const deleteCourse = (id) => {
+		dispatch(deleteCourseThunk(id));
+	};
 
 	return (
 		<div className='course-card'>
@@ -52,6 +59,19 @@ const CourseCard = ({
 					buttonText='Show Course'
 					url={`/courses/${id}`}
 				/>
+				<Button buttonType={buttonTypes.LINK} url={`/courses/update/${id}`}>
+					<img className='btn-img' alt='edit course' src='/icons8-edit.svg' />
+				</Button>
+				<Button
+					buttonType={buttonTypes.BUTTON}
+					onClick={() => deleteCourse(id)}
+				>
+					<img
+						className='btn-img'
+						alt='delete course'
+						src='/icons8-trash.svg'
+					/>
+				</Button>
 			</div>
 		</div>
 	);

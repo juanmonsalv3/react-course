@@ -1,21 +1,22 @@
 import * as actions from './actionTypes';
 
-export const tokenAdded = (token) => {
+export const tokenAddedAction = (token) => {
 	return {
 		type: actions.TOKEN_ADDED,
-		payload: {
-			token,
-		},
+		payload: token,
 	};
 };
 
-export const userLoggedIn = (userInfo) => ({
+export const userLoggedInAction = (userInfo) => ({
 	type: actions.USER_LOGGED,
-	payload: {
-		userInfo,
-	},
+	payload: userInfo,
 });
 
-export const userLoggedOut = () => ({
+export const userLoggedOutAction = () => ({
 	type: actions.USER_LOGOUT,
+});
+
+export const setAuthErrorsAction = (errors) => ({
+	type: actions.AUTH_ERRORS,
+	payload: errors,
 });

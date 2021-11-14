@@ -8,14 +8,17 @@ import { useSelector } from 'react-redux';
 import Button from '../../common/Button/Button';
 import Input from '../../common/Input/Input';
 import { useDispatch } from 'react-redux';
-import { tokenAdded } from '../../store/user/actionCreators';
-import { selectIsAuthenticated } from '../../store/user/selectors';
-import api from '../../store/services';
+import {
+	selectAuthErrors,
+	selectIsAuthenticated,
+} from '../../store/user/selectors';
+import { loginUserThunk } from '../../store/user/thunks';
+import { setAuthErrorsAction } from '../../store/user/actionCreators';
 
 const Login = () => {
 	const [formDetails, setFormDetails] = useState({});
-	const [errors, setErrors] = useState([]);
 	const isAuth = useSelector(selectIsAuthenticated);
+	const authErrors = useSelector(selectAuthErrors);
 	const dispatch = useDispatch();
 
 	if (isAuth) {
@@ -23,29 +26,15 @@ const Login = () => {
 	}
 
 	const updateFormDetails = (key, e) => {
-		setErrors([]);
+		dispatch(setAuthErrorsAction([]));
 		setFormDetails({ ...formDetails, [key]: e.target.value });
 	};
 
 	const onSubmit = async (e) => {
-		setErrors([]);
+		dispatch(setAuthErrorsAction([]));
 
 		e.preventDefault();
-		try {
-			const response = await api.login(formDetails);
-			if (response.status === 201) {
-				const authToken = response.data.result;
-				dispatch(tokenAdded(authToken));
-			}
-		} catch (error) {
-			if (error.response && error.response.data && error.response.data.errors) {
-				setErrors(error.response.data.errors);
-			} else if (error.response.data && error.response.data.result) {
-				setErrors([error.response.data.result]);
-			} else {
-				setErrors(['Unknown error, try again later']);
-			}
-		}
+		dispatch(loginUserThunk(formDetails));
 	};
 
 	return (
@@ -76,11 +65,11 @@ const Login = () => {
 				buttonType='submit'
 			/>
 
-			{errors.length > 0 && (
+			{authErrors.length > 0 && (
 				<>
 					<p>There are some errors:</p>
 					<ul className='errors-list'>
-						{errors.map((e, i) => (
+						{authErrors.map((e, i) => (
 							<li key={i}>{e}</li>
 						))}
 					</ul>

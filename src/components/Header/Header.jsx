@@ -1,20 +1,37 @@
-import PropTypes from 'prop-types';
-
 import './Header.css';
+
+import { useEffect } from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Logo from './components/Logo/Logo';
 import Button from '../../common/Button/Button';
-import { useDispatch, useSelector } from 'react-redux';
-import { selectUser } from '../../store/user/selectors';
-import { userLoggedOut } from '../../store/user/actionCreators';
+import {
+	selectAuthToken,
+	selectIsAuthenticated,
+	selectUser,
+} from '../../store/user/selectors';
+import { getUserInfoThunk, logoutUserThunk } from '../../store/user/thunks';
 
 const Header = () => {
 	const userInfo = useSelector(selectUser);
+	const authToken = useSelector(selectAuthToken);
+	const isAuth = useSelector(selectIsAuthenticated);
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		if (authToken && !isAuth) {
+			dispatch(getUserInfoThunk());
+		}
+	}, [dispatch, authToken, isAuth]);
+
 	const onLogout = () => {
-		dispatch(userLoggedOut());
+		dispatch(logoutUserThunk());
 	};
+
+	if (!isAuth) {
+		return <></>;
+	}
 
 	return (
 		<header className='header'>

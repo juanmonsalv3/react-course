@@ -1,22 +1,21 @@
-import moment from 'moment';
-import api from '../services';
 import * as actions from './actionTypes';
-import { generateId } from '../../helpers/uuid';
 
-export async function fetchCourses(dispatch, getState) {
-	try {
-		const response = await api.fetchCourses();
-		dispatch({ type: actions.FETCH_COURSES, payload: response.data.result });
-	} catch (error) {
-		console.error(error);
-	}
-}
+export const fetchCoursesAction = (courses) => ({
+	type: actions.FETCH_COURSES,
+	payload: courses,
+});
 
-export const addCourse = (course) => ({
+export const addCourseAction = (newCourse) => ({
 	type: actions.ADD_COURSE,
-	payload: {
-		...course,
-		id: generateId(),
-		creationDate: moment().format('DD/MM/yyyy'),
-	},
+	payload: newCourse,
+});
+
+export const updateCourseAction = (newCourse) => ({
+	type: actions.UPDATE_COURSE,
+	payload: newCourse,
+});
+
+export const delteCourseAction = (courseId) => ({
+	type: actions.DELETE_COURSE,
+	payload: courseId,
 });

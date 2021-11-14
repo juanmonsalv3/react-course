@@ -4,26 +4,26 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 
+import PrivateRoute from '../PrivateRoute/PrivateRoute';
 import CourseCard from './components/CourseCard/CourseCard';
 import SearchBar from './components/SearchBar/SearchBar';
 import Button from '../../common/Button/Button';
-import CreateCourse from '../CreateCourse/CreateCourse';
+import CourseForm from '../CourseForm/CourseForm';
 import CourseInfo from '../CourseInfo/CourseInfo';
 import loginRequired from '../../common/loginRequired';
-import { fetchCourses } from '../../store/courses/actionCreators';
 import { buttonTypes } from '../../constants';
 import { selectCourses } from '../../store/courses/selectors';
-import { fetchAuthors } from '../../store/authors/actionCreators';
+import { fetchAuthorsThunk } from '../../store/authors/thunks';
+import { fetchCoursesThunk } from '../../store/courses/thunks';
 
 const Courses = () => {
-	const allCourses = useSelector(selectCourses);
 	const [searchTerm, setSearchTerm] = useState('');
-
+	const allCourses = useSelector(selectCourses);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(fetchCourses);
-		dispatch(fetchAuthors);
+		dispatch(fetchCoursesThunk());
+		dispatch(fetchAuthorsThunk());
 	}, [dispatch]);
 
 	const includesTerm = (prop) =>
@@ -63,8 +63,13 @@ const Courses = () => {
 				)}
 			/>
 			<Switch>
-				<Route exact path='/courses/add' component={CreateCourse} />
-				<Route path='/courses/:courseId' component={CourseInfo} />
+				<PrivateRoute exact path='/courses/add' component={CourseForm} />
+				<PrivateRoute
+					exact
+					path='/courses/update/:courseId'
+					component={CourseForm}
+				/>
+				<Route eact path='/courses/:courseId' component={CourseInfo} />
 			</Switch>
 		</div>
 	);

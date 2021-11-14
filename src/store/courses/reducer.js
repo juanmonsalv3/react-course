@@ -8,6 +8,12 @@ const coursesReducer = (state = coursesInitialState, action) => {
 			return action.payload;
 		case actions.ADD_COURSE:
 			return [...state, action.payload];
+		case actions.UPDATE_COURSE:
+			return state.map((course) =>
+				course.id === action.payload.id ? action.payload : course
+			);
+		case actions.DELETE_COURSE:
+			return state.filter((course) => course.id !== action.payload);
 		default:
 			return state;
 	}
