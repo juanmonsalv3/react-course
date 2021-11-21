@@ -37,4 +37,5 @@ test('renders user info correctly', () => {
 	expect(screen.getByText('Juan')).not.toBeNull();
 	expect(screen.queryByTestId('username')).not.toBeNull();
 	expect(screen.queryByTestId('username').textContent).toBe('Juan');
+	expect(screen.queryByTestId('logo').textContent).not.toBeNull();
 });

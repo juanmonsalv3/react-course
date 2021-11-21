@@ -37,22 +37,27 @@ const CourseCard = ({
 	};
 
 	return (
-		<div className='course-card'>
+		<div className='course-card' data-testid='course-card'>
 			<div className='main-section'>
-				<h2 className='course-title'>{title}</h2>
-				<p>{description}</p>
+				<h2 className='course-title' data-testid='course-title'>
+					{title}
+				</h2>
+				<p data-testid='course-description'>{description}</p>
 			</div>
 			<div className='side-section'>
 				<p>
 					<b>Authors: </b>
-					{getAuthorsElement()}
+					<span data-testid='course-authors'>{getAuthorsElement()}</span>
 				</p>
 				<p>
 					<b>Duration: </b>
-					{formatTime(duration)} hours
+					<span data-testid='course-duration'>
+						{formatTime(duration)} hours
+					</span>
 				</p>
 				<p>
-					<b>Created: </b> {creationDate}
+					<b>Created: </b>{' '}
+					<span data-testid='course-creation-date'>{creationDate}</span>
 				</p>
 				<Button
 					buttonType={buttonTypes.LINK}
