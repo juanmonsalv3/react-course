@@ -34,11 +34,13 @@ const Header = () => {
 	}
 
 	return (
-		<header className='header'>
+		<header className='header' data-testid='header'>
 			<Logo />
 			{userInfo.isAuth && (
 				<div className='header__right-pane'>
-					<div className='username'>{userInfo.name}</div>
+					<div className='username' data-testid='username'>
+						{userInfo.name}
+					</div>
 					<Button
 						buttonText='Logout'
 						className='header__logout-button'
