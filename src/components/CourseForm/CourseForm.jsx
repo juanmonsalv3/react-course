@@ -62,7 +62,7 @@ const CourseForm = () => {
 	};
 
 	return (
-		<div className='create-course-section'>
+		<div className='create-course-section' data-testid='course-form-section'>
 			<p>
 				<Link to='/courses'>{'< Back to Courses'}</Link>
 			</p>

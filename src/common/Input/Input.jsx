@@ -1,7 +1,7 @@
 import './Input.css';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import { generateId } from '../../helpers/uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { inputTypes } from '../../constants';
 
 const Input = ({
@@ -12,7 +12,7 @@ const Input = ({
 	value,
 	onChange = () => {},
 }) => {
-	const id = generateId();
+	const id = uuidv4();
 	return (
 		<div className={clsx('generic-input', className)}>
 			{labelText && <label htmlFor={id}>{labelText}</label>}

@@ -16,9 +16,9 @@ const AuthorSelection = ({ pickedAuthors = [], pickAuthor, unpickAuthor }) => {
 	}, [allAuthors, pickedAuthors]);
 
 	return (
-		<div className='authors-list'>
+		<div className='authors-list' data-testid='authors-list-component'>
 			<h4>Authors</h4>
-			<ul>
+			<ul data-testid='available-authors-list'>
 				{availableAuthors.map((author) => (
 					<li key={author.id}>
 						<div className='author-name'>{author.name}</div>

@@ -16,15 +16,17 @@ import { selectCourses } from '../../store/courses/selectors';
 import { fetchAuthorsThunk } from '../../store/authors/thunks';
 import { fetchCoursesThunk } from '../../store/courses/thunks';
 
-const Courses = () => {
+const Courses = ({ fetchCourses = true }) => {
 	const [searchTerm, setSearchTerm] = useState('');
 	const allCourses = useSelector(selectCourses);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		dispatch(fetchCoursesThunk());
-		dispatch(fetchAuthorsThunk());
-	}, [dispatch]);
+		if (fetchCourses) {
+			dispatch(fetchCoursesThunk());
+			dispatch(fetchAuthorsThunk());
+		}
+	}, [dispatch, fetchCourses]);
 
 	const includesTerm = (prop) =>
 		(prop || '').toLowerCase().includes(searchTerm);
@@ -40,7 +42,7 @@ const Courses = () => {
 	};
 
 	return (
-		<div className='courses-section'>
+		<div className='courses-section' data-testid='courses-section'>
 			<Route
 				path='/courses'
 				exact
@@ -49,12 +51,15 @@ const Courses = () => {
 						<Button
 							buttonText='Add New Course'
 							buttonType={buttonTypes.LINK}
+							testId='create-course-btn'
 							className='create-course-btn'
 							url='/courses/add'
 						/>
 						<SearchBar onSearch={onSearch} {...props} />
-						{filteredCourses.length === 0 && <div>No Courses to show</div>}
-						<div className='courses-list'>
+						{filteredCourses.length === 0 && (
+							<div data-testid='no-courses-notice'>No Courses to show</div>
+						)}
+						<div className='courses-list' data-testid='courses-list'>
 							{filteredCourses.map((course) => (
 								<CourseCard {...course} key={course.id} />
 							))}

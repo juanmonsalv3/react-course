@@ -11,6 +11,7 @@ const Button = ({
 	className,
 	children,
 	url,
+	testId,
 	onClick = () => {},
 }) => {
 	const classNames = clsx('generic-button', className);
@@ -18,14 +19,19 @@ const Button = ({
 		case buttonTypes.BUTTON:
 		case buttonTypes.SUBMIT:
 			return (
-				<button type={buttonType} className={classNames} onClick={onClick}>
+				<button
+					type={buttonType}
+					data-testid={testId}
+					className={classNames}
+					onClick={onClick}
+				>
 					{buttonText}
 					{children}
 				</button>
 			);
 		case buttonTypes.LINK:
 			return (
-				<Link to={url} className={classNames}>
+				<Link to={url} className={classNames} data-testid={testId}>
 					{buttonText}
 					{children}
 				</Link>
@@ -39,6 +45,7 @@ Button.propTypes = {
 	buttonType: PropTypes.oneOf(Object.values(buttonTypes)),
 	buttonText: PropTypes.string,
 	className: PropTypes.string,
+	testId: PropTypes.string,
 	url: PropTypes.string,
 };
 
